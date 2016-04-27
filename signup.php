@@ -1,43 +1,60 @@
 <!DOCTYPE html>
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
+
 <html>
     <head>
         <meta charset="UTF-8">
-            <title>Sign In</title>
-            <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.9/jquery.validate.min.js"></script>
-            <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
-<!--            <script>
-            $(document).ready(function(){
-                $("#register-form").validate({
-                    rules:{
-                        name:{
-                            required:true,
-                            minlength:6
-                        }
-                    }
-                    messages:{
-                        name:{
-                            required : 'Please enter the total loyalty points you wish to apply to this ',
-                            minlength : MAximum length
-                        }
-                    }
-                });
-            });
-            </script>-->
+            <title>Sign Up</title>
+            
+            
+            <script>
+        function validateForm() {
+            var x = document.getElementById('emailvalidator').value;
+            
+            
+            var atpos = x.indexOf("@");
+            var dotpos = x.lastIndexOf(".");
+            if (x == null || x == "" && atpos<1 || dotpos<atpos+2 || dotpos+2>=x.length) {
+                document.getElementById('emailerror').innerHTML="Enter the valid email address";
+                return false;
+            }
+            
+            var y = document.getElementById('passwordvalidator').value;
+            if(y == null || y == "" && y.length > 7 ){
+                document.getElementById('passworderror').innerHTML="Enter the the 7 or above character";
+                return false;
+            }
+            
+            var n1 = document.getElementById('namevalidator1').value;
+            
+            if(n1 == null || n1 == "" ){
+                document.getElementById('nameerror').innerHTML="You can not leave name fields null";
+                return false;
+            }
+            var n2 = document.getElementById('namevalidator2').value;
+            if(n2 == null || n2 == "" ){
+                document.getElementById('nameerror').innerHTML="You can not leave name fields null";
+                return false;
+            }
+            var num = document.getElementById('num').value;
+            if(num == null || num == "" ){
+                document.getElementById('numerror').innerHTML="Enter Phone no";
+                return false;
+            }
+            }
+        
+            </script>
+
     <style>
         body{
             margin: 0;
             padding: 0;
-            background: url(img/bg.png) repeat;
+            background: url(img/clearsky.jpg) repeat;
         }
-        #signin{
+        #signup{
+            
             margin: 20px auto 3% auto;
-            width: 15%;
-            height: 400px;
+            width: 24%;
+            
             background-color: #3bd9ef;
             -webkit-border-radius: 5px;
             border-radius: 5px;
@@ -75,7 +92,7 @@ and open the template in the editor.
             -webkit-border-radius: 5px;
             border-radius: 5px; 
             margin: 10px;
-            width: 82%;
+            width: 50%;
         }
         input[type=submit]:hover {
             padding:5px 15px; 
@@ -85,49 +102,105 @@ and open the template in the editor.
             -webkit-border-radius: 5px;
             border-radius: 5px; 
             margin: 10px;
-            width: 82%;
+            width: 50%;
         }
+                #footer{
+                position: absolute;
+                bottom: 0;
+                width: 100%;
+            }
        </style>
     </head>
     <body>
-         <div id="signin">
-
-            <form id="register-form" novalidate="novalidate">
+        <?php include 'header.php';?>
+         <div id="signup">
+             
+             <form id="register-form" novalidate="novalidate" onsubmit="return validateForm()" method="post">
             <table align="center" action="main.php">
                 <tr>
                     <td style="color:white;font-family: sans-serif;" align="center">Sign Up</td>
                 </tr>
                 <tr>
-                    <td><input type="email" name="email" placeholder="Email" ></td>
+                    <td><input type="email" id="emailvalidator"  name="email" placeholder="Email" ></td>
                     
                 </tr>
 
                 <tr>
-                    <td></label><input type="password" name="password" placeholder="Password" ></td>
+                    <td></label><input type="password" id="passwordvalidator" name="password" placeholder="Password" ></td>
                     
                 </tr>
 
                 <tr>
-                    <td></label><input type="text" name="name" placeholder="First Name" ></td>
+                    <td></label><input type="text" id="namevalidator1" name="f_name" placeholder="First Name" ></td>
                     
                 </tr>
                 <tr>
                 <tr>
-                    <td></label><input type="text" name="name" placeholder="Last Name" ></td>
+                    <td></label><input type="text" id="namevalidator2" name="l_name" placeholder="Last Name" ></td>
                     
                 </tr>
                 <tr>
-                    <td></label><input type="text" name="text" placeholder="Phone Number" ></td>
+                    <td></label><input type="text" id="num" name="number" placeholder="Phone Number" ></td>
                    
                 </tr>
                 <tr>
-                    <td align="center"><input type="submit" value="Sign in" ></td>
+                    <td align="center"><input type="submit" name="submit" value="Sign in" ></td>
                 </tr>
                 <tr>
                     <td align="center"><p href="#" style="text-decoration: none;font-family: sans-serif;">By clicking sign up yor are agree to our policy?</p></td>
                 </tr>
             </table>
             </form>
+             <table>
+                 <tr>
+                     <td><span id="emailerror" style="color:red;"></span><td>
+                 </tr>
+                 <tr>
+                     <td><span id="passworderror" style="color:red;"></span><td>
+                 </tr>
+                     <td><span id="nameerror" style="color:red;"></span><td>
+                 </tr>                 <tr>
+
+                 <tr>
+                     <td><span id="numerror" style="color:red;"></span><td>
+                 </tr>
+                  <tr>
+                              <td><span id="numerror" style="color:red;">
+                         <?php 
+        include 'includes/dbconnection.php';
+        
+        if(isset($_POST['submit'])){
+        $email = $_POST['email'];
+        $password = $_POST['password'];
+        $f_name = $_POST['f_name'];
+        $l_name = $_POST['l_name'];
+        $number = $_POST['number'];
+        
+        $e_query = "SELECT * FROM signup WHERE email = '{$email}'";
+        $run_e_query = mysqli_query($link,$e_query);
+        
+        if (mysqli_num_rows($run_e_query) > 0 )
+        {
+            /* Username already exists */
+            echo 'This User is already exist';
+        }
+        else{
+            $inser_query = "INSERT INTO signup (email, password, first_name, last_name,phone) VALUES ('$email','$password','$f_name','$l_name','$number')";
+                    if (mysqli_query($link, $inser_query)) {
+                    echo "<h4 style='color:green'>Register Succesfully</h4>";
+                    echo "<script>window.open('userprofile.php','_self')</script>";
+                            }                   
+                        else {
+                            echo "Error: ". mysqli_error($inser_query);
+                    }
+        }
+        }
+?>
+                          </span><td>
+                 </tr>
+             </table>
+             
         </div>
+        <div id="footer" > <?php include 'includes/footer.php';?> </div>
     </body>
 </html>
